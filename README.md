@@ -1,4 +1,4 @@
-# kanban-project
+# kanban-project-for-SoftBeez
 
 ### **README.md**
 
