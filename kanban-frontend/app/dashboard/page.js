@@ -1,11 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-} from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([]);
@@ -15,10 +11,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Fetch tasks from the live backend (updated with live API URL)
   const fetchTasks = async () => {
     setLoading(true);
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5000/api/tasks', {
+    const res = await fetch('https://kanban-project-1bc1.onrender.com/api/tasks', {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
@@ -27,9 +24,10 @@ export default function DashboardPage() {
     else router.push('/');
   };
 
+  // Handle task creation (updated with live API URL)
   const handleCreate = async () => {
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5000/api/tasks', {
+    const res = await fetch('https://kanban-project-1bc1.onrender.com/api/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,25 +38,27 @@ export default function DashboardPage() {
     if (res.ok) {
       setTitle('');
       setPriority('low');
-      fetchTasks();
+      fetchTasks(); // Re-fetch tasks after creating a new one
     }
   };
 
+  // Handle task deletion (updated with live API URL)
   const handleDelete = async (id) => {
     const token = localStorage.getItem('token');
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`https://kanban-project-1bc1.onrender.com/api/tasks/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     });
-    fetchTasks();
+    fetchTasks(); // Re-fetch tasks after deleting one
   };
 
+  // Handle task editing (updated with live API URL)
   const handleEdit = async (id, oldTitle) => {
     const newTitle = prompt('Edit Task Title:', oldTitle);
     if (!newTitle) return;
 
     const token = localStorage.getItem('token');
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`https://kanban-project-1bc1.onrender.com/api/tasks/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -66,16 +66,17 @@ export default function DashboardPage() {
       },
       body: JSON.stringify({ title: newTitle }),
     });
-    fetchTasks();
+    fetchTasks(); // Re-fetch tasks after editing
   };
 
+  // Handle drag-and-drop task updates (updated with live API URL)
   const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
     if (!destination || destination.droppableId === source.droppableId) return;
 
-    const newStatus = destination.droppableId;
+    const newStatus = destination.droppableId; // New task status (column)
     const token = localStorage.getItem('token');
-    await fetch(`http://localhost:5000/api/tasks/${draggableId}`, {
+    await fetch(`https://kanban-project-1bc1.onrender.com/api/tasks/${draggableId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -84,13 +85,15 @@ export default function DashboardPage() {
       body: JSON.stringify({ status: newStatus }),
     });
 
-    fetchTasks();
+    fetchTasks(); // Re-fetch tasks after drag-and-drop
   };
 
+  // Fetch tasks on component mount
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  // Organize tasks into columns
   useEffect(() => {
     const updatedColumns = { todo: [], 'in-progress': [], completed: [] };
     tasks.forEach((task) => updatedColumns[task.status]?.push(task));

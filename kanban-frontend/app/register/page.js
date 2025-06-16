@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; // Import Next.js Image component for optimization
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -26,7 +25,7 @@ export default function RegisterPage() {
     setLoading(true);  // Set loading state
 
     // Proceed with the registration API call
-    const res = await fetch('http://localhost:5000/api/auth/register', {
+    const res = await fetch('https://kanban-project-1bc1.onrender.com/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),  // No password validation
@@ -37,7 +36,7 @@ export default function RegisterPage() {
 
     if (res.ok) {
       alert('Registration successful! Please log in.');
-      router.push('/'); // Redirect to login page after successful registration
+      router.push('/login'); // Redirect to login page after successful registration
     } else {
       alert(data.error || 'Registration failed');
     }
@@ -92,7 +91,7 @@ export default function RegisterPage() {
 
           <button
             onClick={handleRegister}
-            disabled={loading}  
+            disabled={loading}  // Disable the button while loading
             className={`w-full ${loading ? 'bg-gray-500' : 'bg-indigo-600'} hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50`}
           >
             {loading ? 'Processing...' : 'Sign Up'}
@@ -100,7 +99,7 @@ export default function RegisterPage() {
 
           <p className="mt-6 text-center text-gray-600 text-sm">
             Already have an account?{' '}
-            <Link href="/" className="text-indigo-600 hover:text-indigo-700 font-medium">
+            <Link href="/login" className="text-indigo-600 hover:text-indigo-700 font-medium">
               Log In
             </Link>
           </p>

@@ -1,25 +1,34 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; // Import Next.js Image component for optimization
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
   const router = useRouter();
 
   const handleLogin = async () => {
-    const res = await fetch('http://localhost:5000/api/auth/login', {
+    setLoading(true);  // Set loading state to true when request is sent
+
+    const res = await fetch('https://kanban-project-1bc1.onrender.com/api/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json();
+    setLoading(false); // Reset loading state
+
     if (res.ok) {
+      // Save the JWT token in localStorage
       localStorage.setItem('token', data.token);
+      // Redirect to the dashboard after successful login
       router.push('/dashboard');
     } else {
+      // Show error if login failed
       alert(data.error || 'Login failed');
     }
   };
@@ -30,7 +39,7 @@ export default function LoginPage() {
         {/* Left Section (Image and Quote) */}
         <div className="hidden md:flex flex-col items-start justify-end p-10 w-1/2 relative bg-cover bg-center"
              style={{ backgroundImage: "url('https://i.postimg.cc/LsYzVdc8/premium-vector-1711987681684-5f80c7411b0e.avif')" }}>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div> {/* Dark overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
           <div className="relative z-10 text-white">
             <p className="text-3xl font-semibold leading-relaxed mb-4">
               &quot;Organize, Prioritize, and Achieve — One Task at a Time!&quot;
@@ -73,13 +82,14 @@ export default function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            disabled={loading}  // Disable button while loading
+            className={`w-full ${loading ? 'bg-gray-500' : 'bg-indigo-600'} hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50`}
           >
-            Log In
+            {loading ? 'Processing...' : 'Log In'}
           </button>
 
           <p className="mt-6 text-center text-gray-600 text-sm">
-            Dont have an account?{' '}
+            Don&apos;t have an account?{' '}
             <a href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
               Sign up
             </a>
