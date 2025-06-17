@@ -14,7 +14,7 @@ A Kanban board application built with **React** (Next.js) for the frontend and *
 #### Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kanban-project.git
+git clone https://github.com/bayzidalim/kanban-project.git
 ````
 
 #### Navigate to the frontend directory:
@@ -51,7 +51,7 @@ This will start the development server on [http://localhost:3000](http://localho
 #### Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kanban-project.git
+git clone https://github.com/bayzidalim/kanban-project.git
 ```
 
 #### Navigate to the backend directory:
