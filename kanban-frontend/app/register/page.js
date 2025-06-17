@@ -36,7 +36,7 @@ export default function RegisterPage() {
 
     if (res.ok) {
       alert('Registration successful! Please log in.');
-      router.push('/login'); // Redirect to login page after successful registration
+      router.push('/'); // Redirect to login page after successful registration
     } else {
       alert(data.error || 'Registration failed');
     }
