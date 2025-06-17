@@ -2,7 +2,7 @@
 
 ### **README.md**
 
-### **Caution: Login and Registraion could delay because the backend server could be in sleepmode
+### **Caution: <span style="color:red;">Login and Registraion could delay because the backend server could be in sleepmode</span>
 ````markdown
 # Kanban Project
 
