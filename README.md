@@ -2,6 +2,7 @@
 
 ### **README.md**
 
+### **Caution: Login and Registraion could delay because the backend server could be in sleepmode
 ````markdown
 # Kanban Project
 
