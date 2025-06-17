@@ -53,7 +53,7 @@ export default function LoginPage() {
         <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Welcome back!</h2>
           <p className="text-gray-600 text-center mb-8">
-            Build your design system effortlessly with our powerful component library.
+            Stay organized, stay ahead! With our Kanban board, managing your tasks is no longer a challenge.
           </p>
 
           <div className="mb-4">
