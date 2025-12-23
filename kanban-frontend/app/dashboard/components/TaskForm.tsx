@@ -46,6 +46,7 @@ export const TaskForm = ({ onSubmit, loading }: TaskFormProps) => {
     >
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 w-full">
         <Input
+          type="text"
           className="w-full md:max-w-xs"
           placeholder="New Task Title"
           value={formData.title}
