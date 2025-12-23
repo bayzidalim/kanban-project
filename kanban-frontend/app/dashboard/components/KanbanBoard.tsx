@@ -1,6 +1,6 @@
 'use client';
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,7 +27,7 @@ const priorityConfig = {
 
 export const KanbanBoard = ({ columns, onDragEnd, onDelete, onEdit }: KanbanBoardProps) => {
   return (
-    <DragDropContext onDragEnd={onDragEnd} mode="standard">
+    <DragDropContext onDragEnd={onDragEnd}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {Object.entries(columns).map(([status, tasks]) => (
           <Droppable key={status} droppableId={status} isDropDisabled={false} isCombineEnabled={false}>
@@ -56,20 +56,16 @@ export const KanbanBoard = ({ columns, onDragEnd, onDelete, onEdit }: KanbanBoar
                       {tasks.map((task, index) => (
                         <Draggable key={task._id} draggableId={task._id} index={index} isDragDisabled={false}>
                           {(provided, snapshot) => (
-                            <motion.div
+                            <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
+                              style={{ ...provided.draggableProps.style }}
                               className={`p-4 mb-4 rounded-lg shadow-md flex justify-between items-center transition-all duration-200 ${
                                 priorityConfig[task.priority].color
                               } ${priorityConfig[task.priority].border} ${
                                 snapshot.isDragging ? 'rotate-2 shadow-xl' : ''
                               }`}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: 20 }}
-                              transition={{ duration: 0.3, delay: index * 0.05 }}
-                              whileHover={{ scale: 1.02 }}
                             >
                               <div className="flex flex-col flex-1 min-w-0">
                                 <span className="font-medium text-gray-800 truncate">{task.title}</span>
@@ -108,7 +104,7 @@ export const KanbanBoard = ({ columns, onDragEnd, onDelete, onEdit }: KanbanBoar
                                   ❌
                                 </Button>
                               </div>
-                            </motion.div>
+                            </div>
                           )}
                         </Draggable>
                       ))}

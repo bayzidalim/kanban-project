@@ -1,4 +1,4 @@
-import { Droppable } from 'react-beautiful-dnd';
+import { Droppable } from '@hello-pangea/dnd';
 import TaskCard from './TaskCard';
 
 export default function Column({ status, tasks, onEdit, onDelete }) {
