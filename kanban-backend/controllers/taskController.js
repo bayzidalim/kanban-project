@@ -1,16 +1,15 @@
 const Task = require('../models/Task');
 
-exports.getTasks = async (req, res) => {
+exports.getTasks = async (req, res, next) => {
     try {
         const tasks = await Task.findByUserId(req.userId);
         res.json(tasks);
     } catch (error) {
-        console.error('Error fetching tasks:', error);
-        res.status(500).json({ error: 'Failed to fetch tasks' });
+        next(error);
     }
 };
 
-exports.createTask = async (req, res) => {
+exports.createTask = async (req, res, next) => {
     try {
         const { title, description, dueDate, priority } = req.body;
         
@@ -20,14 +19,13 @@ exports.createTask = async (req, res) => {
 
         const task = await Task.create(req.userId, { 
             title: title.trim(), 
-            description, 
+            description: description ? description.trim() : null, 
             dueDate, 
-            priority 
+            priority: priority || 'low'
         });
         res.status(201).json(task);
     } catch (error) {
-        console.error('Error creating task:', error);
-        res.status(500).json({ error: 'Failed to create task' });
+        next(error);
     }
 };
 

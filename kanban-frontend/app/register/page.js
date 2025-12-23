@@ -2,49 +2,61 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  // Email validation (basic regex for email format)
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
 
   const handleRegister = async () => {
-    // Check if email is valid
+    setError('');
+    
     if (!isValidEmail(email)) {
-      alert('Please enter a valid email address.');
+      setError('Please enter a valid email address.');
       return;
     }
 
-    setLoading(true);  // Set loading state
+    setLoading(true);
 
-    // Proceed with the registration API call
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api'}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),  // No password validation
-    });
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api'}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
-    setLoading(false);  // Reset loading state
+      const data = await res.json();
 
-    if (res.ok) {
-      alert('Registration successful! Please log in.');
-      router.push('/'); // Redirect to login page after successful registration
-    } else {
-      alert(data.error || 'Registration failed');
+      if (res.ok) {
+        // Success! Redirect to login (or maybe logging in automatically would be better, but staying consistent with flow)
+        // Ideally we show a success message but for now redirect is okay, maybe with query param
+        router.push('/'); 
+      } else {
+        setError(data.error || 'Registration failed');
+      }
+    } catch (err) {
+      setError('An error occurred during registration. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="flex bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl w-full">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl w-full"
+      >
 
         <div className="hidden md:flex flex-col items-start justify-end p-10 w-1/2 relative bg-cover bg-center"
              style={{ backgroundImage: "url('https://i.postimg.cc/LsYzVdc8/premium-vector-1711987681684-5f80c7411b0e.avif')" }}>
@@ -89,10 +101,24 @@ export default function RegisterPage() {
             />
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm mb-4 flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 flex-shrink-0">
+                <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+              </svg>
+              {error}
+            </motion.div>
+          )}
+
           <button
             onClick={handleRegister}
-            disabled={loading}  // Disable the button while loading
-            className={`w-full ${loading ? 'bg-gray-500' : 'bg-indigo-600'} hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50`}
+            disabled={loading}
+            className={`w-full ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'} text-white font-medium py-3 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50`}
           >
             {loading ? 'Processing...' : 'Sign Up'}
           </button>
@@ -104,7 +130,7 @@ export default function RegisterPage() {
             </Link>
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
