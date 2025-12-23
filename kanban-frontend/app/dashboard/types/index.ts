@@ -1,5 +1,5 @@
 export interface Task {
-  _id: string;
+  id: string;
   title: string;
   status: 'todo' | 'in-progress' | 'completed';
   priority: 'low' | 'medium' | 'high';

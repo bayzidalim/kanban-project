@@ -54,7 +54,7 @@ export const KanbanBoard = ({ columns, onDragEnd, onDelete, onEdit }: KanbanBoar
                   <CardContent className="py-0 px-0">
                     <AnimatePresence>
                       {tasks.map((task, index) => (
-                        <Draggable key={task._id} draggableId={task._id} index={index} isDragDisabled={false}>
+                        <Draggable key={task.id} draggableId={String(task.id)} index={index} isDragDisabled={false}>
                           {(provided, snapshot) => (
                             <div
                               ref={provided.innerRef}
@@ -88,7 +88,7 @@ export const KanbanBoard = ({ columns, onDragEnd, onDelete, onEdit }: KanbanBoar
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => onEdit(task._id, task.title)}
+                                  onClick={() => onEdit(String(task.id), task.title)}
                                   className="p-1 h-auto hover:bg-gray-200"
                                   title="Edit task"
                                 >
@@ -97,7 +97,7 @@ export const KanbanBoard = ({ columns, onDragEnd, onDelete, onEdit }: KanbanBoar
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => onDelete(task._id)}
+                                  onClick={() => onDelete(String(task.id))}
                                   className="p-1 h-auto hover:bg-red-200"
                                   title="Delete task"
                                 >
