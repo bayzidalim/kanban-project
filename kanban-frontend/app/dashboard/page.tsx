@@ -22,7 +22,8 @@ export default function DashboardPage() {
     setDismissedError(error);
   };
 
-  const showError = error && error !== dismissedError;
+  // Determine the error message to display
+  const errorMessage = error && error !== dismissedError ? error : null;
 
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
@@ -37,7 +38,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Error Display */}
-      <ErrorDisplay error={showError} onDismiss={handleErrorDismiss} />
+      <ErrorDisplay error={errorMessage} onDismiss={handleErrorDismiss} />
 
       {/* Task Form */}
       <TaskForm onSubmit={createTask} loading={loading} />
